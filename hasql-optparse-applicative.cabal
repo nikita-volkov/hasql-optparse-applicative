@@ -3,9 +3,9 @@ name:          hasql-optparse-applicative
 version:       0.7.1.2
 synopsis:      "optparse-applicative" parsers for "hasql"
 category:      Hasql, Database, PostgreSQL, Options
-homepage:      https://github.com/sannsyn/hasql-optparse-applicative 
+homepage:      https://github.com/nikita-volkov/hasql-optparse-applicative 
 bug-reports:
-  https://github.com/sannsyn/hasql-optparse-applicative/issues 
+  https://github.com/nikita-volkov/hasql-optparse-applicative/issues 
 
 author:        Nikita Volkov <nikita.y.volkov@mail.ru>
 maintainer:    Nikita Volkov <nikita.y.volkov@mail.ru>
@@ -15,7 +15,7 @@ license-file:  LICENSE
 
 source-repository head
   type:     git
-  location: git://github.com/sannsyn/hasql-optparse-applicative.git
+  location: git://github.com/nikita-volkov/hasql-optparse-applicative.git
 
 library
   hs-source-dirs:     library
