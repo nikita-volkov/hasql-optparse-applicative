@@ -70,6 +70,6 @@ library
     , base >=4.11 && <5
     , bytestring >=0.10 && <0.13
     , hasql >=1.6 && <1.7
-    , hasql-pool >=1 && <1.1
+    , hasql-pool >=1.0.1 && <1.1
     , optparse-applicative >=0.18 && <0.19
     , time >=1.10 && <2
