@@ -49,7 +49,7 @@ poolSize modifyName =
   option auto
     . mconcat
     $ [ long (modifyName "pool-size"),
-        value 1,
+        value 3,
         showDefault,
         help "Amount of connections in the pool"
       ]
@@ -79,7 +79,7 @@ connectionIdleTime modifyName =
   attoparsedOption AttoparsecTime.diffTime
     . mconcat
     $ [ long (modifyName "pool-connection-idle-time"),
-        value (fromIntegral (5 * 60)),
+        value (fromIntegral (10 * 60)),
         showDefault,
         help "Maximal connection idle time"
       ]
