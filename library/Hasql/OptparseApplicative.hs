@@ -10,6 +10,7 @@ import qualified Data.Attoparsec.Text as Attoparsec
 import qualified Hasql.Connection as Connection
 import Hasql.OptparseApplicative.Prelude
 import qualified Hasql.Pool.Config as Pool.Config
+import qualified Hasql.Pool.Config.Defaults as Pool.Config.Defaults
 import Options.Applicative
 
 -- * Pool
@@ -49,7 +50,7 @@ poolSize modifyName =
   option auto
     . mconcat
     $ [ long (modifyName "pool-size"),
-        value 1,
+        value Pool.Config.Defaults.size,
         showDefault,
         help "Amount of connections in the pool"
       ]
@@ -59,7 +60,7 @@ acquisitionTimeout modifyName =
   attoparsedOption AttoparsecTime.diffTime
     . mconcat
     $ [ long (modifyName "pool-acquisition-timeout"),
-        value 10,
+        value Pool.Config.Defaults.acquisitionTimeout,
         showDefault,
         help "How long it takes until the attempt to connect is considered timed out"
       ]
@@ -69,7 +70,7 @@ connectionLifetime modifyName =
   attoparsedOption AttoparsecTime.diffTime
     . mconcat
     $ [ long (modifyName "pool-connection-lifetime"),
-        value (fromIntegral (24 * 60 * 60)),
+        value Pool.Config.Defaults.agingTimeout,
         showDefault,
         help "Maximal lifetime for connections. Allows to periodically clean up the connection resources to avoid server-side leaks"
       ]
@@ -79,7 +80,7 @@ connectionIdleTime modifyName =
   attoparsedOption AttoparsecTime.diffTime
     . mconcat
     $ [ long (modifyName "pool-connection-idle-time"),
-        value (fromIntegral (5 * 60)),
+        value Pool.Config.Defaults.idlenessTimeout,
         showDefault,
         help "Maximal connection idle time"
       ]
