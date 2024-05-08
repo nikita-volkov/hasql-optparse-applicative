@@ -65,11 +65,11 @@ library
   exposed-modules:    Hasql.OptparseApplicative
   other-modules:      Hasql.OptparseApplicative.Prelude
   build-depends:
-    , attoparsec >=0.14 && <0.15
+    , attoparsec >=0.14 && <1
     , attoparsec-time >=1.0.3 && <1.1
     , base >=4.11 && <5
-    , bytestring >=0.10 && <0.13
-    , hasql >=1.6 && <1.7
-    , hasql-pool >=1.0.1 && <1.1
-    , optparse-applicative >=0.18 && <0.19
+    , bytestring >=0.10 && <1
+    , hasql >=1.6 && <2
+    , hasql-pool >=1.0.1 && <1.3
+    , optparse-applicative >=0.18 && <1
     , time >=1.10 && <2
