@@ -7,7 +7,10 @@ where
 
 import qualified Attoparsec.Time.Text as AttoparsecTime
 import qualified Data.Attoparsec.Text as Attoparsec
-import qualified Hasql.Connection as Connection
+import Data.Text (Text)
+import qualified Hasql.Connection.Setting as Connection.Setting
+import qualified Hasql.Connection.Setting.Connection as Connection.Setting.Connection
+import qualified Hasql.Connection.Setting.Connection.Param as Connection.Setting.Connection.Param
 import Hasql.OptparseApplicative.Prelude
 import qualified Hasql.Pool.Config as Pool.Config
 import qualified Hasql.Pool.Config.Defaults as Pool.Config.Defaults
@@ -95,16 +98,22 @@ connectionSettings ::
   -- You can use this function to prefix the name or you can just specify 'id',
   -- if you don't want it changed.
   (String -> String) ->
-  Parser Connection.Settings
+  Parser [Connection.Setting.Setting]
 connectionSettings modifyName =
-  Connection.settings
-    <$> host modifyName
-    <*> port modifyName
-    <*> user modifyName
-    <*> password modifyName
-    <*> database modifyName
+  sequenceA
+    [ Connection.Setting.connection
+        . Connection.Setting.Connection.params
+        <$> sequenceA
+          [ Connection.Setting.Connection.Param.host <$> host modifyName,
+            Connection.Setting.Connection.Param.port <$> port modifyName,
+            Connection.Setting.Connection.Param.user <$> user modifyName,
+            Connection.Setting.Connection.Param.password <$> password modifyName,
+            Connection.Setting.Connection.Param.dbname <$> database modifyName
+          ],
+      Connection.Setting.usePreparedStatements <$> usePreparedStatements modifyName
+    ]
 
-host :: (String -> String) -> Parser ByteString
+host :: (String -> String) -> Parser Text
 host modifyName =
   fmap fromString
     $ strOption
@@ -125,7 +134,7 @@ port modifyName =
         help "Server port"
       ]
 
-user :: (String -> String) -> Parser ByteString
+user :: (String -> String) -> Parser Text
 user modifyName =
   fmap fromString
     $ strOption
@@ -136,7 +145,7 @@ user modifyName =
         help "Username"
       ]
 
-password :: (String -> String) -> Parser ByteString
+password :: (String -> String) -> Parser Text
 password modifyName =
   fmap fromString
     $ strOption
@@ -147,13 +156,23 @@ password modifyName =
         help "Password"
       ]
 
-database :: (String -> String) -> Parser ByteString
+database :: (String -> String) -> Parser Text
 database modifyName =
   fmap fromString
     $ strOption
     $ mconcat
       [ long (modifyName "database"),
         help "Database name"
+      ]
+
+usePreparedStatements :: (String -> String) -> Parser Bool
+usePreparedStatements modifyName =
+  fmap not
+    $ switch
+    $ mconcat
+      [ long (modifyName "no-prepared-statements"),
+        help "Avoid using prepared statements",
+        showDefault
       ]
 
 -- * Helpers
