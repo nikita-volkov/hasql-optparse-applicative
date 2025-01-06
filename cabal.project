@@ -1,3 +1,5 @@
 packages: .
-constraints:
-  , bytestring >=0.12
+allow-newer:
+  , *:base
+  , *:template-haskell
+  , *:ghc-prim
