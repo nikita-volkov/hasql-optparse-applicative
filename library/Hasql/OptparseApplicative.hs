@@ -8,9 +8,7 @@ where
 import qualified Attoparsec.Time.Text as AttoparsecTime
 import qualified Data.Attoparsec.Text as Attoparsec
 import Data.Text (Text)
-import qualified Hasql.Connection.Setting as Connection.Setting
-import qualified Hasql.Connection.Setting.Connection as Connection.Setting.Connection
-import qualified Hasql.Connection.Setting.Connection.Param as Connection.Setting.Connection.Param
+import qualified Hasql.Connection.Settings as Connection.Settings
 import Hasql.OptparseApplicative.Prelude
 import qualified Hasql.Pool.Config as Pool.Config
 import qualified Hasql.Pool.Config.Defaults as Pool.Config.Defaults
@@ -98,20 +96,16 @@ connectionSettings ::
   -- You can use this function to prefix the name or you can just specify 'id',
   -- if you don't want it changed.
   (String -> String) ->
-  Parser [Connection.Setting.Setting]
+  Parser Connection.Settings.Settings
 connectionSettings modifyName =
-  sequenceA
-    [ Connection.Setting.connection
-        . Connection.Setting.Connection.params
-        <$> sequenceA
-          [ Connection.Setting.Connection.Param.host <$> host modifyName,
-            Connection.Setting.Connection.Param.port <$> port modifyName,
-            Connection.Setting.Connection.Param.user <$> user modifyName,
-            Connection.Setting.Connection.Param.password <$> password modifyName,
-            Connection.Setting.Connection.Param.dbname <$> database modifyName
-          ],
-      Connection.Setting.usePreparedStatements <$> usePreparedStatements modifyName
-    ]
+  mconcat
+    <$> sequenceA
+      [ (\h p -> Connection.Settings.hostAndPort h p) <$> host modifyName <*> port modifyName,
+        Connection.Settings.user <$> user modifyName,
+        Connection.Settings.password <$> password modifyName,
+        Connection.Settings.dbname <$> database modifyName,
+        (\b -> if b then mempty else Connection.Settings.noPreparedStatements True) <$> usePreparedStatements modifyName
+      ]
 
 host :: (String -> String) -> Parser Text
 host modifyName =
