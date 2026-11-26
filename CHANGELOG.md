@@ -1,3 +1,7 @@
+# v0.9.1.2
+
+- Support `hasql-2.1` and `hasql-pool-1.6`.
+
 # v0.9.1.1
 
 - Conform to the new `hasql` API (v2.0)
